@@ -26,7 +26,7 @@ contract FixSwap {
     constructor(address _busdAddress, address _fixAddress) {
        busd = IERC20(_busdAddress);
        fix = IERC20(_fixAddress);        
-       fixPricePerBUSD = 1; // Initial swap rate: 1 BUSD  = 1 FIX
+       fixPricePerBUSD = 1000000000000000000; // Initial swap rate: 1 BUSD  = 1 FIX
        owner = msg.sender; // Contract owner
     }
 
@@ -38,7 +38,8 @@ contract FixSwap {
         uint256 userBUSDBalance = busd.balanceOf(msg.sender);
         require(userBUSDBalance >= amountBUSD, "BUSD balance exceeds swap amount");
 
-        uint256 amountFix = amountBUSD * fixPricePerBUSD;
+        uint256 amountFix = amountBUSD * fixPricePerBUSD / 10 ** 18;
+
         require(fix.balanceOf(address(this)) >= amountFix, "Private Sale Ended, insuffient funds inside contract");
 
         // Transfer USD  from the user to Owner address
